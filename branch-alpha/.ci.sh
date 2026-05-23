@@ -152,6 +152,16 @@ import moduleChildProcess from "child_process";
     }));
 }());
 ' "$@" # '
+    # Rename arbitrary $GITHUB_REPO_BASENAME to "jslint" in screenshot file.
+    GITHUB_REPO_BASENAME="$(printf "$GITHUB_GITHUB_IO" | cut -d'/' -f2)"
+    if [ "$GITHUB_REPO_BASENAME" != jslint ]
+    then
+        for FILE in $(ls .artifact/*_2f${GITHUB_REPO_BASENAME}_2f*)
+        do
+            mv "$FILE" "$(printf "$FILE" | \
+                sed -e "s|_2f${GITHUB_REPO_BASENAME}_2f|_2fjslint_2f|")"
+        done
+    fi
     # remove bloated json-coverage-files
     rm .artifact/coverage/*.json # js-hack - */
     rm .artifact/coverage_sqlite3_*/*.json # js-hack - */
